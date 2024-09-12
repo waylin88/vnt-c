@@ -22,6 +22,7 @@ on:
           - mips
           - i686
           - x86_64
+          - x86_64_win
       feature:
         description: '按需编译模块 openssl-vendored,ring-cipher,aes_cbc,aes_ecb,aes_gcm,sm4_cbc,chacha20_poly1305,server_encrypt,ip_proxy,port_mapping,log,command,file_config,lz4,zstd  按需添加想要的模块，多个模块以,分隔'
         required: false
@@ -88,6 +89,10 @@ jobs:
                 TARGET=x86_64-unknown-linux-musl
                 NAME=vnt-cli_linux-x86_64
                 ;;
+              x86_64_win)
+                TARGET=x86_64-pc-windows-msvc
+                NAME=vnt-cli_windows-x86_64
+                ;;
             esac
             
             echo "TARGET=${TARGET}" >> $GITHUB_ENV
@@ -132,6 +137,8 @@ jobs:
             rustflags = ["-C", "target-feature=+crt-static","-C", "strip=symbols"]
             [target.i686-unknown-linux-musl]
             rustflags = ["-C", "target-feature=+crt-static","-C", "strip=symbols"]
+            [target.x86_64-pc-windows-msvc]
+            rustflags = ["-C", "target-feature=+crt-static","-C", "strip=symbols"] 
             EOF
       - name: 添加编译平台
         run: rustup target add $TARGET
